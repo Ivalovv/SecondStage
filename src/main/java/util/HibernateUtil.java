@@ -24,15 +24,4 @@ public class HibernateUtil {
             throw new ExceptionInInitializerError(e);
         }
     }
-
-    public static void close() {
-        try {
-            if (sessionFactory != null && !sessionFactory.isClosed()) {
-                sessionFactory.close();
-                logger.info("SessionFactory успешно закрыта");
-            }
-        } catch (Exception e) {
-            logger.error("Ошибка при закрытии SessionFactory", e);
-        }
-    }
 }
