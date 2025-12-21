@@ -1,0 +1,25 @@
+2025-12-21 17:34:40 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.2.7.Final
+2025-12-21 17:34:40 INFO  org.hibernate.cfg.Environment - HHH000406: Using bytecode reflection optimizer
+2025-12-21 17:34:41 WARN  org.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2025-12-21 17:34:41 INFO  org.hibernate.orm.connections.pooling - HHH10001005: Loaded JDBC driver class: org.postgresql.Driver
+2025-12-21 17:34:41 INFO  org.hibernate.orm.connections.pooling - HHH10001012: Connecting with JDBC URL [jdbc:postgresql://localhost:5432/User]
+2025-12-21 17:34:41 INFO  org.hibernate.orm.connections.pooling - HHH10001001: Connection properties: {user=ivalov, password=****}
+2025-12-21 17:34:41 INFO  org.hibernate.orm.connections.pooling - HHH10001003: Autocommit mode: false
+2025-12-21 17:34:41 INFO  org.hibernate.orm.connections.pooling - HHH10001115: Connection pool size: 20 (min=1)
+2025-12-21 17:34:41 INFO  org.hibernate.bytecode.internal.BytecodeProviderInitiator - HHH000021: Bytecode provider name : bytebuddy
+2025-12-21 17:34:43 INFO  org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-12-21 17:34:43 INFO  org.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@5c448ef] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2025-12-21 17:34:43 INFO  util.HibernateUtil - Hibernate SessionFactory успешно инициализирована
+2025-12-21 17:34:56 INFO  dao.implementation.UserDaoImp - Пользователь найден: User(id=1, name=Ivan Ivalov, email=ivan@example.com, age=30, createdAt=2025-12-17T14:44:34.127489)
+2025-12-21 17:35:04 INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.2.7.Final
+2025-12-21 17:35:04 INFO  org.hibernate.cfg.Environment - HHH000406: Using bytecode reflection optimizer
+2025-12-21 17:35:04 WARN  org.hibernate.orm.connections.pooling - HHH10001002: Using built-in connection pool (not intended for production use)
+2025-12-21 17:35:04 INFO  org.hibernate.orm.connections.pooling - HHH10001005: Loaded JDBC driver class: org.postgresql.Driver
+2025-12-21 17:35:04 INFO  org.hibernate.orm.connections.pooling - HHH10001012: Connecting with JDBC URL [jdbc:postgresql://localhost:5432/User]
+2025-12-21 17:35:04 INFO  org.hibernate.orm.connections.pooling - HHH10001001: Connection properties: {user=ivalov, password=****}
+2025-12-21 17:35:04 INFO  org.hibernate.orm.connections.pooling - HHH10001003: Autocommit mode: false
+2025-12-21 17:35:04 INFO  org.hibernate.orm.connections.pooling - HHH10001115: Connection pool size: 20 (min=1)
+2025-12-21 17:35:05 INFO  org.hibernate.bytecode.internal.BytecodeProviderInitiator - HHH000021: Bytecode provider name : bytebuddy
+2025-12-21 17:35:06 INFO  org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2025-12-21 17:35:06 INFO  org.hibernate.orm.connections.access - HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@7e3236d] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+2025-12-21 17:35:06 INFO  util.HibernateUtil - Hibernate SessionFactory успешно инициализирована
