@@ -1,6 +1,7 @@
 package dao.implementation;
 
 import dao.UserDao;
+import jakarta.persistence.EntityNotFoundException;
 import model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -70,22 +71,26 @@ public class UserDaoImp implements UserDao {
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
 
-            User existing = session.get(User.class, user.getId());
-
-            if (existing == null) {
-                logger.warn("Пользователь с id= {} не найден, обновление отменено",
-                        user.getId());
-
-                tx.rollback();
-                return;
-            }
-
-            existing.setName(user.getName());
-            existing.setEmail(user.getEmail());
-            existing.setAge(user.getAge());
+            int updated = session.createMutationQuery(
+                            "update User u set " +
+                                    "u.name = :name, " +
+                                    "u.email = :email, " +
+                                    "u.age = :age " +
+                                    "where u.id = :id"
+                    )
+                    .setParameter("name", user.getName())
+                    .setParameter("email", user.getEmail())
+                    .setParameter("age", user.getAge())
+                    .setParameter("id", user.getId())
+                    .executeUpdate();
 
             tx.commit();
-            logger.info("Пользователь обновлён: {}", existing);
+
+            if (updated == 0) {
+                logger.warn("Пользователь с id={} не найден, обновление не выполнено", user.getId());
+            } else {
+                logger.info("Пользователь обновлён: {}", user);
+            }
         } catch (Exception e) {
             if (tx != null)
                 tx.rollback();
@@ -101,18 +106,19 @@ public class UserDaoImp implements UserDao {
         try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
 
-            User existing = session.get(User.class, id);
-            if (existing == null) {
-                logger.warn("Пользователь с id= {} не найден, удаление отменено", id);
-
-                tx.rollback();
-                return;
-            }
-            session.remove(existing);
+            int deleted = session.createMutationQuery(
+                            "delete from User u where u.id = :id"
+                    )
+                    .setParameter("id", id)
+                    .executeUpdate();
 
             tx.commit();
 
-            logger.info("Пользователь удален: {}", existing);
+            if (deleted == 0) {
+                logger.warn("Пользователь с id={} не найден, удаление не выполнено", id);
+            } else {
+                logger.info("Пользователь с id={} удалён", id);
+            }
         } catch (Exception e) {
             if (tx != null)
                 tx.rollback();
