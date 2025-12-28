@@ -2,7 +2,9 @@ package dao;
 
 import dao.implementation.UserDaoImp;
 import model.User;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.junit.jupiter.api.*;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.*;
@@ -30,6 +32,12 @@ class UserDaoIntegrationTest {
     @BeforeEach
     void setUp() {
         userDao = new UserDaoImp(sessionFactory);
+
+        try (Session session = sessionFactory.openSession()) {
+            Transaction tx = session.beginTransaction();
+            session.createMutationQuery("delete from User").executeUpdate();
+            tx.commit();
+        }
     }
 
     @AfterAll
@@ -39,7 +47,7 @@ class UserDaoIntegrationTest {
 
     @Test
     void testCreateUser() {
-        User user = new User("Ivan", "ivan7@example.com", 25);
+        User user = new User("Ivan", "ivan@example.com", 25);
         userDao.create(user);
 
         assertTrue(user.getId() > 0, "ID должен быть сгенерирован");
@@ -48,7 +56,7 @@ class UserDaoIntegrationTest {
 
         assertNotNull(readUser, "Пользователь должен быть найден");
         assertEquals("Ivan", readUser.getName());
-        assertEquals("ivan7@example.com", readUser.getEmail());
+        assertEquals("ivan@example.com", readUser.getEmail());
         assertEquals(25, readUser.getAge());
     }
 
@@ -68,7 +76,7 @@ class UserDaoIntegrationTest {
 
     @Test
     void testCreateDuplicateEmail() {
-        User user1 = new User("Ivan", "ivan9@example.com", 25);
+        User user1 = new User("Ivan", "ivan@example.com", 25);
         userDao.create(user1);
 
         assertTrue(user1.getId() > 0);
@@ -138,7 +146,7 @@ class UserDaoIntegrationTest {
 
     @Test
     void testUpdateWithNullFields() {
-        User user = new User("Ivan", "ivan5@example.com", 25);
+        User user = new User("Ivan", "ivan@example.com", 25);
         userDao.create(user);
 
         user.setName(null);
@@ -149,7 +157,7 @@ class UserDaoIntegrationTest {
 
     @Test
     void testDeleteExistingUser() {
-        User user = new User("Ivan", "ivan23@example.com", 25);
+        User user = new User("Ivan", "ivan@example.com", 25);
         userDao.create(user);
 
         userDao.delete(user.getId());
