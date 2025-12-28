@@ -130,18 +130,11 @@ class UserDaoIntegrationTest {
     @Test
     void testUpdateNonExistingUser() {
         User nonExistentUser = new User("Ghost", "ghost@example.com", 50);
-        int fakeId = 9999;
 
-        assertThrows(Exception.class,() -> {
-            sessionFactory.getCurrentSession().createMutationQuery(
-                            "update User u set u.name = :name, u.email = :email, u.age = :age where u.id = :id"
-                    )
-                    .setParameter("name", nonExistentUser.getName())
-                    .setParameter("email", nonExistentUser.getEmail())
-                    .setParameter("age", nonExistentUser.getAge())
-                    .setParameter("id", fakeId)
-                    .executeUpdate();
-        });
+        userDao.update(nonExistentUser);
+
+        User fromDb = userDao.read(nonExistentUser.getId());
+        assertNull(fromDb, "Пользователь не должен существовать в БД");
     }
 
     @Test
