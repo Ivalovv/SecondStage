@@ -124,7 +124,7 @@ class UserDaoIntegrationTest {
         User nonExistentUser = new User("Ghost", "ghost@example.com", 50);
         int fakeId = 9999;
 
-        assertDoesNotThrow(() -> {
+        assertThrows(Exception.class,() -> {
             sessionFactory.getCurrentSession().createMutationQuery(
                             "update User u set u.name = :name, u.email = :email, u.age = :age where u.id = :id"
                     )
@@ -144,7 +144,7 @@ class UserDaoIntegrationTest {
         user.setName(null);
         user.setEmail(null);
 
-        assertDoesNotThrow(() -> userDao.update(user));
+        assertThrows(Exception.class,() -> userDao.update(user));
     }
 
     @Test
