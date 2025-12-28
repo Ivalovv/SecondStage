@@ -3,6 +3,7 @@ package model;
 import lombok.*;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -22,7 +23,7 @@ public class User {
     private String name;
 
     @Setter
-    @Column(name = "email", nullable = false, length = 150)
+    @Column(name = "email", nullable = false, unique = true, length = 150)
     private String email;
 
     @Setter

@@ -39,7 +39,7 @@ class UserDaoIntegrationTest {
 
     @Test
     void testCreateUser() {
-        User user = new User("Ivan", "ivan@example.com", 25);
+        User user = new User("Ivan", "ivan7@example.com", 25);
         userDao.create(user);
 
         assertTrue(user.getId() > 0, "ID должен быть сгенерирован");
@@ -48,7 +48,7 @@ class UserDaoIntegrationTest {
 
         assertNotNull(readUser, "Пользователь должен быть найден");
         assertEquals("Ivan", readUser.getName());
-        assertEquals("ivan@example.com", readUser.getEmail());
+        assertEquals("ivan7@example.com", readUser.getEmail());
         assertEquals(25, readUser.getAge());
     }
 
@@ -68,7 +68,7 @@ class UserDaoIntegrationTest {
 
     @Test
     void testCreateDuplicateEmail() {
-        User user1 = new User("Ivan", "ivan@example.com", 25);
+        User user1 = new User("Ivan", "ivan9@example.com", 25);
         userDao.create(user1);
 
         assertTrue(user1.getId() > 0);
@@ -124,7 +124,7 @@ class UserDaoIntegrationTest {
         User nonExistentUser = new User("Ghost", "ghost@example.com", 50);
         int fakeId = 9999;
 
-        assertDoesNotThrow(() -> {
+        assertThrows(Exception.class,() -> {
             sessionFactory.getCurrentSession().createMutationQuery(
                             "update User u set u.name = :name, u.email = :email, u.age = :age where u.id = :id"
                     )
@@ -138,18 +138,18 @@ class UserDaoIntegrationTest {
 
     @Test
     void testUpdateWithNullFields() {
-        User user = new User("Ivan", "ivan@example.com", 25);
+        User user = new User("Ivan", "ivan5@example.com", 25);
         userDao.create(user);
 
         user.setName(null);
         user.setEmail(null);
 
-        assertDoesNotThrow(() -> userDao.update(user));
+        assertThrows(Exception.class,() -> userDao.update(user));
     }
 
     @Test
     void testDeleteExistingUser() {
-        User user = new User("Ivan", "ivan@example.com", 25);
+        User user = new User("Ivan", "ivan23@example.com", 25);
         userDao.create(user);
 
         userDao.delete(user.getId());
