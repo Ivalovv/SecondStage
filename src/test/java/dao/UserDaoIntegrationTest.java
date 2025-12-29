@@ -168,6 +168,5 @@ class UserDaoIntegrationTest {
         User readUser = userDao.read(fakeId);
         assertNull(readUser);
     }
-
 }
 

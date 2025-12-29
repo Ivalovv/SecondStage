@@ -16,6 +16,7 @@
         <slf4j.version>2.0.13</slf4j.version>
         <log4j.version>2.23.1</log4j.version>
         <testcontainers.version>1.21.4</testcontainers.version>
+        <mockito.verion>4.5.0</mockito.verion>
     </properties>
 
     <dependencies>
@@ -88,6 +89,20 @@
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
             <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.verion}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>${mockito.verion}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
