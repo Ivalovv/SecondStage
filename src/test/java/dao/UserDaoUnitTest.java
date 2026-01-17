@@ -1,7 +1,7 @@
 package dao;
 
 import dao.implementation.UserDaoImp;
-import model.User;
+import spring.model.User;
 import org.hibernate.*;
 import org.hibernate.query.MutationQuery;
 import org.junit.jupiter.api.*;
@@ -66,7 +66,7 @@ public class UserDaoUnitTest {
 
         when(session.get(User.class, expectedUser.getId())).thenReturn(expectedUser);
 
-        User result = userDao.read(expectedUser.getId());
+        User result = userDao.read((int) (long)expectedUser.getId());
 
         assertNotNull(result);
         assertEquals(expectedUser, result);

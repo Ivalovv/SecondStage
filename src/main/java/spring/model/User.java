@@ -1,4 +1,4 @@
-package model;
+package spring.model;
 
 import lombok.*;
 
@@ -16,7 +16,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private Long id;
 
     @Setter
     @Column(name = "name", nullable = false, length = 100)

@@ -1,7 +1,7 @@
 package dao;
 
 import dao.implementation.UserDaoImp;
-import model.User;
+import spring.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -52,7 +52,7 @@ class UserDaoIntegrationTest {
 
         assertTrue(user.getId() > 0, "ID должен быть сгенерирован");
 
-        User readUser = userDao.read(user.getId());
+        User readUser = userDao.read((int) (long)user.getId());
 
         assertNotNull(readUser, "Пользователь должен быть найден");
         assertEquals("Ivan", readUser.getName());
@@ -91,7 +91,7 @@ class UserDaoIntegrationTest {
         User user = new User("Ivan", "ivan@example.com", 25);
         userDao.create(user);
 
-        User readUser = userDao.read(user.getId());
+        User readUser = userDao.read((int) (long)user.getId());
 
         assertNotNull(readUser, "Пользователь должен быть найден");
         assertEquals(user.getId(), readUser.getId());
@@ -120,7 +120,7 @@ class UserDaoIntegrationTest {
 
         userDao.update(user);
 
-        User updatedUser = userDao.read(user.getId());
+        User updatedUser = userDao.read((int) (long)user.getId());
         assertNotNull(updatedUser);
         assertEquals("Ivan Updated", updatedUser.getName());
         assertEquals("updated@example.com", updatedUser.getEmail());
@@ -133,7 +133,7 @@ class UserDaoIntegrationTest {
 
         userDao.update(nonExistentUser);
 
-        User fromDb = userDao.read(nonExistentUser.getId());
+        User fromDb = userDao.read((int) (long)nonExistentUser.getId());
         assertNull(fromDb, "Пользователь не должен существовать в БД");
     }
 
@@ -145,7 +145,7 @@ class UserDaoIntegrationTest {
         user.setName(null);
         user.setEmail(null);
 
-        assertThrows(Exception.class,() -> userDao.update(user));
+        assertThrows(Exception.class, () -> userDao.update(user));
     }
 
     @Test
@@ -153,9 +153,9 @@ class UserDaoIntegrationTest {
         User user = new User("Ivan", "ivan@example.com", 25);
         userDao.create(user);
 
-        userDao.delete(user.getId());
+        userDao.delete((int) (long)user.getId());
 
-        User deletedUser = userDao.read(user.getId());
+        User deletedUser = userDao.read((int) (long)user.getId());
         assertNull(deletedUser);
     }
 
