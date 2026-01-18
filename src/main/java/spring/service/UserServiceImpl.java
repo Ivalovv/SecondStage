@@ -1,6 +1,8 @@
 package spring.service;
 
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 import spring.model.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,11 +40,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto updateUser(Long id, UserRequestDto dto) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Пользователь не найден."));
-        mapper.updateEntity(user, dto);
+        int updated = userRepository.updateUser(
+                id,
+                dto.getName(),
+                dto.getEmail(),
+                dto.getAge()
+        );
+        if (updated == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
 
-        return mapper.toDto(userRepository.save(user));
+        User user = userRepository.findById(id)
+                .orElseThrow();
+
+        return mapper.toDto(user);
     }
 
     @Override
