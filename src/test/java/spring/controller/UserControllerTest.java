@@ -3,11 +3,14 @@ package spring.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import spring.dto.UserRequestDto;
 import spring.dto.UserResponseDto;
@@ -20,14 +23,13 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(UserController.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+@Transactional
 class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockBean
-    private UserService userService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -39,71 +41,87 @@ class UserControllerTest {
         request.setEmail("ivan@test.com");
         request.setAge(25);
 
-        UserResponseDto response = new UserResponseDto(
-                1L,
-                "Ivan",
-                "ivan@test.com",
-                25,
-                LocalDateTime.now()
-        );
-
-        when(userService.createUser(any(UserRequestDto.class)))
-                .thenReturn(response);
-
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.name").value("Ivan"))
                 .andExpect(jsonPath("$.email").value("ivan@test.com"))
                 .andExpect(jsonPath("$.age").value(25));
     }
     @Test
     void shouldReturnUserById() throws Exception {
-        UserResponseDto response = new UserResponseDto(
-                1L,
-                "Ivan",
-                "ivan@test.com",
-                25,
-                LocalDateTime.now()
-        );
+        UserRequestDto request = new UserRequestDto();
+        request.setName("Ivan");
+        request.setEmail("ivan@test.com");
+        request.setAge(25);
 
-        when(userService.getUser(1L)).thenReturn(response);
+        String response = mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
 
-        mockMvc.perform(get("/users/{id}", 1))
+        Long userId = objectMapper.readTree(response).get("id").asLong();
+
+        mockMvc.perform(get("/users/{id}", userId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("Ivan"));
+                .andExpect(jsonPath("$.id").value(userId))
+                .andExpect(jsonPath("$.name").value("Ivan"))
+                .andExpect(jsonPath("$.email").value("ivan@test.com"))
+                .andExpect(jsonPath("$.age").value(25));
     }
     @Test
     void shouldDeleteUser() throws Exception {
-        mockMvc.perform(delete("/users/{id}", 1))
+        UserRequestDto request = new UserRequestDto();
+        request.setName("Ivan");
+        request.setEmail("ivan@test.com");
+        request.setAge(25);
+
+        String response = mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Long userId = objectMapper.readTree(response).get("id").asLong();
+
+        mockMvc.perform(delete("/users/{id}", userId))
                 .andExpect(status().isNoContent());
     }
     @Test
     void shouldUpdateUser() throws Exception {
-        UserRequestDto request = new UserRequestDto();
-        request.setName("NewName");
-        request.setEmail("new@test.com");
-        request.setAge(30);
+        UserRequestDto create  = new UserRequestDto();
+        create.setName("Ivan");
+        create.setEmail("ivan@test.com");
+        create.setAge(25);
 
-        UserResponseDto response = new UserResponseDto(
-                1L,
-                "NewName",
-                "new@test.com",
-                30,
-                LocalDateTime.now()
-        );
-
-        when(userService.updateUser(any(), any()))
-                .thenReturn(response);
-
-        mockMvc.perform(put("/users/{id}", 1)
+        String response = mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(create)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+
+        Long userId = objectMapper.readTree(response).get("id").asLong();
+
+        UserRequestDto update = new UserRequestDto();
+        update.setName("NewName");
+        update.setEmail("new@test.com");
+        update.setAge(30);
+
+        mockMvc.perform(put("/users/{id}", userId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(update)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("NewName"));
+                .andExpect(jsonPath("$.name").value("NewName"))
+                .andExpect(jsonPath("$.email").value("new@test.com"))
+                .andExpect(jsonPath("$.age").value(30));
     }
 
     @Test
@@ -139,14 +157,20 @@ class UserControllerTest {
         request.setEmail("ivan@test.com");
         request.setAge(25);
 
-        when(userService.createUser(any(UserRequestDto.class)))
-                .thenThrow(new ResponseStatusException(HttpStatus.CONFLICT, "Email already exists"));
+        UserRequestDto request1 = new UserRequestDto();
+        request1.setName("Iva");
+        request1.setEmail("ivan@test.com");
+        request1.setAge(25);
 
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isConflict())
-                .andExpect(status().reason("Email already exists"));
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request1)))
+                .andExpect(status().isConflict());
     }
 
 }
