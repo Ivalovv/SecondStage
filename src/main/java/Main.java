@@ -2,6 +2,7 @@ import ConsoleApplication.Application;
 import dao.UserDao;
 import dao.implementation.UserDaoImp;
 import org.hibernate.SessionFactory;
+
 import util.HibernateUtil;
 
 public class Main {

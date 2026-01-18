@@ -1,7 +1,7 @@
 package ConsoleApplication;
 
 import dao.UserDao;
-import model.User;
+import spring.model.User;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;

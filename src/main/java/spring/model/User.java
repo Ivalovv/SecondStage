@@ -1,8 +1,9 @@
-package model;
+package spring.model;
 
 import lombok.*;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -15,14 +16,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private Long id;
 
     @Setter
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
     @Setter
-    @Column(name = "email", nullable = false, length = 150)
+    @Column(name = "email", nullable = false, unique = true, length = 150)
     private String email;
 
     @Setter

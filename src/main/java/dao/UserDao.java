@@ -1,6 +1,6 @@
 package dao;
 
-import model.User;
+import spring.model.User;
 
 public interface UserDao {
     void create(User user);

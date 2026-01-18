@@ -1,8 +1,7 @@
 package dao.implementation;
 
 import dao.UserDao;
-import jakarta.persistence.EntityNotFoundException;
-import model.User;
+import spring.model.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
