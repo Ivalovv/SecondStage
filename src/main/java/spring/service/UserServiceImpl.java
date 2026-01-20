@@ -3,6 +3,8 @@ package spring.service;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
+import spring.dto.UserEventDto;
+import spring.kafka.producer.UserEventProducer;
 import spring.model.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,15 +21,20 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper mapper;
+    private final UserEventProducer eventProducer;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper mapper) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper mapper, UserEventProducer eventProducer) {
         this.userRepository = userRepository;
         this.mapper = mapper;
+        this.eventProducer = eventProducer;
     }
 
     @Override
     public UserResponseDto createUser(UserRequestDto dto) {
         User saved = userRepository.save(mapper.toEntity(dto));
+
+        eventProducer.send(new UserEventDto(saved.getEmail(), UserEventDto.OperationType.CREATED));
+
         return mapper.toDto(saved);
     }
 
@@ -58,6 +65,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Пользователь не найден."));
+
+        userRepository.delete(user);
+
+        eventProducer.send(new UserEventDto(user.getEmail(), UserEventDto.OperationType.DELETED));
     }
 }
