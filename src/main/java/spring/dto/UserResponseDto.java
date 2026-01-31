@@ -1,12 +1,13 @@
 package spring.dto;
 
 import lombok.*;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class UserResponseDto {
+public class UserResponseDto extends RepresentationModel<UserResponseDto> {
 
     private Long id;
     private String name;
