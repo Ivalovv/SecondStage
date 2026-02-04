@@ -38,6 +38,7 @@ public class UserController {
     public ResponseEntity<UserResponseDto> getUserById(
             @Parameter(description = "ID пользователя")
             @PathVariable Long id) {
+        System.out.println("Incoming request to /users/" + id);
         try {
             UserResponseDto response = userService.getUser(id);
             addLinks(response);
