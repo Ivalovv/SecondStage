@@ -52,7 +52,7 @@ class UserDaoIntegrationTest {
 
         assertTrue(user.getId() > 0, "ID должен быть сгенерирован");
 
-        User readUser = userDao.read((int) (long)user.getId());
+        User readUser = userDao.read(user.getId());
 
         assertNotNull(readUser, "Пользователь должен быть найден");
         assertEquals("Ivan", readUser.getName());
@@ -91,7 +91,7 @@ class UserDaoIntegrationTest {
         User user = new User("Ivan", "ivan@example.com", 25);
         userDao.create(user);
 
-        User readUser = userDao.read((int) (long)user.getId());
+        User readUser = userDao.read(user.getId());
 
         assertNotNull(readUser, "Пользователь должен быть найден");
         assertEquals(user.getId(), readUser.getId());
@@ -102,7 +102,7 @@ class UserDaoIntegrationTest {
 
     @Test
     void testReadNonExistingUser() {
-        int nonExistentId = 9999;
+        long nonExistentId = 9999;
 
         User readUser = userDao.read(nonExistentId);
 
@@ -120,7 +120,7 @@ class UserDaoIntegrationTest {
 
         userDao.update(user);
 
-        User updatedUser = userDao.read((int) (long)user.getId());
+        User updatedUser = userDao.read(user.getId());
         assertNotNull(updatedUser);
         assertEquals("Ivan Updated", updatedUser.getName());
         assertEquals("updated@example.com", updatedUser.getEmail());
@@ -133,7 +133,7 @@ class UserDaoIntegrationTest {
 
         userDao.update(nonExistentUser);
 
-        User fromDb = userDao.read((int) (long)nonExistentUser.getId());
+        User fromDb = userDao.read(nonExistentUser.getId());
         assertNull(fromDb, "Пользователь не должен существовать в БД");
     }
 
@@ -153,15 +153,15 @@ class UserDaoIntegrationTest {
         User user = new User("Ivan", "ivan@example.com", 25);
         userDao.create(user);
 
-        userDao.delete((int) (long)user.getId());
+        userDao.delete((int) (long) user.getId());
 
-        User deletedUser = userDao.read((int) (long)user.getId());
+        User deletedUser = userDao.read(user.getId());
         assertNull(deletedUser);
     }
 
     @Test
     void testDeleteNonExistingUser() {
-        int fakeId = 9999;
+        long fakeId = 9999;
 
         assertDoesNotThrow(() -> userDao.delete(fakeId));
 

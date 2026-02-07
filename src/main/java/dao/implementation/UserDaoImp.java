@@ -37,7 +37,12 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
-    public User read(int id) {
+    public User read(Long id) {
+        if (id == null) {
+            logger.warn("Пользователь с id={} не найден", id);
+            return null;
+        }
+
         Transaction tx = null;
         User user = null;
 
@@ -99,7 +104,7 @@ public class UserDaoImp implements UserDao {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(long id) {
         Transaction tx = null;
 
         try (Session session = sessionFactory.openSession()) {

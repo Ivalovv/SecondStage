@@ -62,11 +62,12 @@ public class UserDaoUnitTest {
 
     @Test
     void testReadUserFound() {
+        long userId = 1;
         User expectedUser = new User("Ivan", "ivan@example.com", 25);
 
-        when(session.get(User.class, expectedUser.getId())).thenReturn(expectedUser);
+        when(session.get(User.class, userId)).thenReturn(expectedUser);
 
-        User result = userDao.read((int) (long)expectedUser.getId());
+        User result = userDao.read(userId);
 
         assertNotNull(result);
         assertEquals(expectedUser, result);
@@ -78,7 +79,7 @@ public class UserDaoUnitTest {
 
     @Test
     void testReadUserNotFound() {
-        int userId = 42;
+        long userId = 42;
 
         when(session.get(User.class, userId)).thenReturn(null);
 
@@ -93,7 +94,7 @@ public class UserDaoUnitTest {
 
     @Test
     void testReadThrowsException() {
-        int userId = 1;
+        long userId = 1;
 
         when(session.get(User.class, userId)).thenThrow(new RuntimeException("DB error"));
 

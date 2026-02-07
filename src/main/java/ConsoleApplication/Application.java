@@ -59,7 +59,7 @@ public class Application {
     }
 
     private void read() {
-        int id = readId();
+        long id = readId();
         if (id == -1) return;
 
         User existingUser = userDao.read(id);
@@ -73,7 +73,7 @@ public class Application {
     }
 
     private void update() {
-        int id = readId();
+        long id = readId();
         if (id == -1) return;
 
         User existingUser = userDao.read(id);
@@ -108,7 +108,7 @@ public class Application {
     }
 
     private void delete() {
-        int id = readId();
+        long id = readId();
         if (id == -1) return;
 
         User existingUser = userDao.read(id);
